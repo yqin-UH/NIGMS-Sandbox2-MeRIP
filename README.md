@@ -1,1 +1,2 @@
-# NIGMS-Sandbox-Repository-Template-
+# NIGMS-Sandbox-Repository-Template
+Git template for NIGMS Sandbox development
