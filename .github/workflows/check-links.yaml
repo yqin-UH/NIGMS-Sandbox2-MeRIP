@@ -18,10 +18,13 @@ jobs:
   link_check:
     name: 'Link Check'
     runs-on: ubuntu-latest
-    using: "composite"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Link Check
+        run: |
+          echo ${{jobs.link_check.uses}}
 
       - name: Link Check
         run: |
