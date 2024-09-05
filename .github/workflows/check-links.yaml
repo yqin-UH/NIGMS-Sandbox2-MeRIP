@@ -18,14 +18,14 @@ jobs:
   link_check:
     name: 'Link Check'
     runs-on: ubuntu-latest
-
+    using: "composite"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Link Check
         run: |
-          python3 .github/workflows/check_links.py
+          python3 ${{github.action_path}}/check_links.py
         env:
           LINK_IGNORE_LIST: https://www.sciencedirect.com,https://portlandpress.com
           PAT: ${{ secrets.PAT }}
