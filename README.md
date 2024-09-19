@@ -1,4 +1,4 @@
-# [Explore RNA methylation using MeRIP-seq]
+# Explore RNA methylation using MeRIP-seq
 ---------------------------------
 
 ## **Contents**
