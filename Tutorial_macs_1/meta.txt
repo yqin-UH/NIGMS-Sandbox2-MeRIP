@@ -1,0 +1,27 @@
+Sample_title	Sample_geo_accession	Run	Group
+2380 input	GSM3359924	SRR7763558	omental tumor
+2343 input	GSM3359925	SRR7763559	omental tumor
+2270 input	GSM3359926	SRR7763560	omental tumor
+2261 input	GSM3359927	SRR7763561	omental tumor
+2221 input	GSM3359928	SRR7763562	omental tumor
+2186 input	GSM3359929	SRR7763563	omental tumor
+2064 input	GSM3359930	SRR7763564	normal Fallopian tube
+2013 input	GSM3359931	SRR7763565	normal Fallopian tube
+2053 input	GSM3359932	SRR7763566	normal Fallopian tube
+2005 input	GSM3359933	SRR7763567	normal Fallopian tube
+1917 input	GSM3359934	SRR7763568	normal Fallopian tube
+1850 input	GSM3359935	SRR7763569	normal Fallopian tube
+2072 input	GSM3359936	SRR7763570	normal Fallopian tube
+2380 m6A-IP	GSM3359937	SRR7763571	omental tumor
+2343 m6A-IP	GSM3359938	SRR7763572	omental tumor
+2270 m6A-IP	GSM3359939	SRR7763573	omental tumor
+2261 m6A-IP	GSM3359940	SRR7763574	omental tumor
+2221 m6A-IP	GSM3359941	SRR7763575	omental tumor
+2186 m6A-IP	GSM3359942	SRR7763576	omental tumor
+2064 m6A-IP	GSM3359943	SRR7763577	normal Fallopian tube
+2013 m6A-IP	GSM3359944	SRR7763578	normal Fallopian tube
+2053 m6A-IP	GSM3359945	SRR7763579	normal Fallopian tube
+2005 m6A-IP	GSM3359946	SRR7763580	normal Fallopian tube
+1917 m6A-IP	GSM3359947	SRR7763581	normal Fallopian tube
+1850 m6A-IP	GSM3359948	SRR7763582	normal Fallopian tube
+2072 m6A-IP	GSM3359949	SRR7763583	normal Fallopian tube

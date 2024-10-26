@@ -1,0 +1,145 @@
+STAR version=2.7.11b
+STAR compilation time,server,dir=2024-07-03T14:39:20+0000 :/opt/conda/conda-bld/star_1720017372352/work/source
+##### Command Line:
+/home/ec2-user/anaconda3/envs/python3/bin/STAR-avx2 --runThreadN 4 --genomeDir Tutorial_1/ref_genome --readFilesIn Tutorial_1/trimmed/subset_SRR7763564_R1_val_1.fq Tutorial_1/trimmed/subset_SRR7763564_R2_val_2.fq --outFileNamePrefix Tutorial_1/STAR/subset_SRR7763564 --outSAMtype BAM SortedByCoordinate --quantMode TranscriptomeSAM GeneCounts
+##### Initial USER parameters from Command Line:
+outFileNamePrefix                 Tutorial_1/STAR/subset_SRR7763564
+###### All USER parameters from Command Line:
+runThreadN                    4     ~RE-DEFINED
+genomeDir                     Tutorial_1/ref_genome     ~RE-DEFINED
+readFilesIn                   Tutorial_1/trimmed/subset_SRR7763564_R1_val_1.fq   Tutorial_1/trimmed/subset_SRR7763564_R2_val_2.fq        ~RE-DEFINED
+outFileNamePrefix             Tutorial_1/STAR/subset_SRR7763564     ~RE-DEFINED
+outSAMtype                    BAM   SortedByCoordinate        ~RE-DEFINED
+quantMode                     TranscriptomeSAM   GeneCounts        ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runThreadN                        4
+genomeDir                         Tutorial_1/ref_genome
+readFilesIn                       Tutorial_1/trimmed/subset_SRR7763564_R1_val_1.fq   Tutorial_1/trimmed/subset_SRR7763564_R2_val_2.fq   
+outFileNamePrefix                 Tutorial_1/STAR/subset_SRR7763564
+outSAMtype                        BAM   SortedByCoordinate   
+quantMode                         TranscriptomeSAM   GeneCounts   
+
+-------------------------------
+##### Final effective command line:
+/home/ec2-user/anaconda3/envs/python3/bin/STAR-avx2   --runThreadN 4   --genomeDir Tutorial_1/ref_genome   --readFilesIn Tutorial_1/trimmed/subset_SRR7763564_R1_val_1.fq   Tutorial_1/trimmed/subset_SRR7763564_R2_val_2.fq      --outFileNamePrefix Tutorial_1/STAR/subset_SRR7763564   --outSAMtype BAM   SortedByCoordinate      --quantMode TranscriptomeSAM   GeneCounts   
+----------------------------------------
+
+Number of fastq files for each mate = 1
+ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
+WARNING: --limitBAMsortRAM=0, will use genome size as RAM limit for BAM sorting
+Finished loading and checking parameters
+Reading genome generation parameters:
+### /home/ec2-user/anaconda3/envs/python3/bin/STAR-avx2   --runMode genomeGenerate      --runThreadN 4   --genomeDir Tutorial_1/ref_genome   --genomeFastaFiles Tutorial_1/chr11_1.5M.fasta      --genomeSAindexNbases 9   --sjdbGTFfile Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf
+### GstrandBit=32
+versionGenome                 2.7.4a     ~RE-DEFINED
+genomeType                    Full     ~RE-DEFINED
+genomeFastaFiles              Tutorial_1/chr11_1.5M.fasta        ~RE-DEFINED
+genomeSAindexNbases           9     ~RE-DEFINED
+genomeChrBinNbits             18     ~RE-DEFINED
+genomeSAsparseD               1     ~RE-DEFINED
+genomeTransformType           None     ~RE-DEFINED
+genomeTransformVCF            -     ~RE-DEFINED
+sjdbOverhang                  100     ~RE-DEFINED
+sjdbFileChrStartEnd           -        ~RE-DEFINED
+sjdbGTFfile                   Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf     ~RE-DEFINED
+sjdbGTFchrPrefix              -     ~RE-DEFINED
+sjdbGTFfeatureExon            exon     ~RE-DEFINED
+sjdbGTFtagExonParentTranscripttranscript_id     ~RE-DEFINED
+sjdbGTFtagExonParentGene      gene_id     ~RE-DEFINED
+sjdbInsertSave                Basic     ~RE-DEFINED
+genomeFileSizes               1789743   13660353        ~RE-DEFINED
+Genome version is compatible with current STAR
+Number of real (reference) chromosomes= 1
+1	chr11	1500000	0
+--sjdbOverhang = 100 taken from the generated genome
+Started loading the genome: Fri Oct 25 22:57:43 2024
+
+Genome: size given as a parameter = 1789743
+SA: size given as a parameter = 13660353
+SAindex: size given as a parameter = 1
+Read from SAindex: pGe.gSAindexNbases=9  nSAi=349524
+nGenome=1789743;  nSAbyte=13660353
+GstrandBit=32   SA number of indices=3311600
+Shared memory is not used for genomes. Allocated a private copy of the genome.
+Genome file size: 1789743 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 1789743 bytes
+SA file size: 13660353 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading SA ... done! state: good=1 eof=0 fail=0 bad=0; loaded 13660353 bytes
+Loading SAindex ... done: 1529259 bytes
+Finished loading the genome: Fri Oct 25 22:57:43 2024
+
+Processing splice junctions database sjdbN=1079,   pGe.sjdbOverhang=100 
+alignIntronMax=alignMatesGapMax=0, the max intron size will be approximately determined by (2^winBinNbits)*winAnchorDistNbins=589824
+Loaded transcript database, nTr=681
+Loaded exon database, nEx=4157
+Created thread # 1
+Created thread # 2
+Created thread # 3
+Thread #1 end of input stream, nextChar=-1
+Completed: thread #2
+Completed: thread #0
+Completed: thread #3
+BAM sorting: 46834 mapped reads
+BAM sorting bins genomic start loci:
+1	0	125269
+2	0	149319
+3	0	189918
+4	0	208874
+5	0	237075
+6	0	285728
+7	0	294687
+8	0	309126
+9	0	314248
+10	0	319379
+11	0	320572
+12	0	357080
+13	0	393406
+14	0	419798
+15	0	462818
+16	0	494986
+17	0	502113
+18	0	530453
+19	0	553521
+20	0	567495
+21	0	589196
+22	0	598475
+23	0	608021
+24	0	611002
+25	0	622206
+26	0	647574
+27	0	692279
+28	0	720063
+29	0	726154
+30	0	767812
+31	0	800605
+32	0	810236
+33	0	810343
+34	0	811604
+35	0	811634
+36	0	812608
+37	0	812620
+38	0	812626
+39	0	823728
+40	0	836355
+41	0	840416
+42	0	861771
+43	0	888843
+44	0	943665
+45	0	961221
+46	0	964023
+47	0	966575
+48	0	986176
+Completed: thread #1
+Joined thread # 1
+Joined thread # 2
+Joined thread # 3
+Oct 25 22:57:45 ..... finished mapping
+RAM after mapping:
+VmPeak:	 1132188 kB; VmSize:	 1066740 kB; VmHWM:	  524264 kB; VmRSS:	  518044 kB; 
+RAM after freeing genome index memory:
+VmPeak:	 1132188 kB; VmSize:	 1050148 kB; VmHWM:	  524264 kB; VmRSS:	  501452 kB; 
+Oct 25 22:57:45 ..... started sorting BAM
+Max memory needed for sorting = 182529
+ALL DONE!

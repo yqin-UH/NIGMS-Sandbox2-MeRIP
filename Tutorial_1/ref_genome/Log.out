@@ -1,0 +1,79 @@
+STAR version=2.7.11b
+STAR compilation time,server,dir=2024-07-03T14:39:20+0000 :/opt/conda/conda-bld/star_1720017372352/work/source
+##### Command Line:
+/home/ec2-user/anaconda3/envs/python3/bin/STAR-avx2 --runThreadN 4 --runMode genomeGenerate --genomeDir Tutorial_1/ref_genome --genomeFastaFiles Tutorial_1/chr11_1.5M.fasta --sjdbGTFfile Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf --genomeSAindexNbases 9
+##### Initial USER parameters from Command Line:
+###### All USER parameters from Command Line:
+runThreadN                    4     ~RE-DEFINED
+runMode                       genomeGenerate        ~RE-DEFINED
+genomeDir                     Tutorial_1/ref_genome     ~RE-DEFINED
+genomeFastaFiles              Tutorial_1/chr11_1.5M.fasta        ~RE-DEFINED
+sjdbGTFfile                   Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf     ~RE-DEFINED
+genomeSAindexNbases           9     ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runMode                           genomeGenerate   
+runThreadN                        4
+genomeDir                         Tutorial_1/ref_genome
+genomeFastaFiles                  Tutorial_1/chr11_1.5M.fasta   
+genomeSAindexNbases               9
+sjdbGTFfile                       Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf
+
+-------------------------------
+##### Final effective command line:
+/home/ec2-user/anaconda3/envs/python3/bin/STAR-avx2   --runMode genomeGenerate      --runThreadN 4   --genomeDir Tutorial_1/ref_genome   --genomeFastaFiles Tutorial_1/chr11_1.5M.fasta      --genomeSAindexNbases 9   --sjdbGTFfile Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf
+----------------------------------------
+
+Number of fastq files for each mate = 1
+ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
+Finished loading and checking parameters
+--genomeDir directory exists and will be overwritten: Tutorial_1/ref_genome/
+Oct 25 22:57:19 ... starting to generate Genome files
+Tutorial_1/chr11_1.5M.fasta : chr # 0  "chr11" chrStart: 0
+Chromosome sequence lengths: 
+chr11	1500000
+Genome sequence total length = 1500000
+Genome size with padding = 1572864
+Oct 25 22:57:19 ..... processing annotations GTF
+Processing pGe.sjdbGTFfile=Tutorial_1/gencode.v46.pri.chr11.1.5M.gtf, found:
+		681 transcripts
+		4157 exons (non-collapsed)
+		1079 collapsed junctions
+Total junctions: 1079
+Oct 25 22:57:19 ..... finished GTF processing
+
+Estimated genome size with padding and SJs: total=genome+SJ=202572864 = 1572864 + 201000000
+GstrandBit=32
+Number of SA indices: 2880000
+Oct 25 22:57:19 ... starting to sort Suffix Array. This may take a long time...
+Number of chunks: 4;   chunks size limit: 7680000 bytes
+Oct 25 22:57:19 ... sorting Suffix Array chunks and saving them to disk...
+Writing 187264 bytes into Tutorial_1/ref_genome//SA_3 ; empty space on disk = 43528392704 bytes ... done
+Writing 7495680 bytes into Tutorial_1/ref_genome//SA_0 ; empty space on disk = 43528204288 bytes ... done
+Writing 7678800 bytes into Tutorial_1/ref_genome//SA_1 ; empty space on disk = 43520708608 bytes ... done
+Writing 7678256 bytes into Tutorial_1/ref_genome//SA_2 ; empty space on disk = 43513028608 bytes ... done
+Oct 25 22:57:19 ... loading chunks from disk, packing SA...
+Oct 25 22:57:19 ... finished generating suffix array
+Oct 25 22:57:19 ... generating Suffix Array index
+Oct 25 22:57:20 ... completed Suffix Array index
+Oct 25 22:57:20   Finished preparing junctions
+Oct 25 22:57:20 ..... inserting junctions into the genome indices
+Oct 25 22:57:20   Finished SA search: number of new junctions=1079, old junctions=0
+Oct 25 22:57:20   Finished sorting SA indicesL nInd=431600
+Genome size with junctions=1789743  1572864   216879
+GstrandBit1=32   GstrandBit=32
+Oct 25 22:57:20   Finished inserting junction indices
+Oct 25 22:57:20   Finished SAi
+Oct 25 22:57:20 ..... finished inserting junctions into genome
+Oct 25 22:57:20 ... writing Genome to disk ...
+Writing 1789743 bytes into Tutorial_1/ref_genome//Genome ; empty space on disk = 43528339456 bytes ... done
+SA size in bytes: 13660353
+Oct 25 22:57:20 ... writing Suffix Array to disk ...
+Writing 13660353 bytes into Tutorial_1/ref_genome//SA ; empty space on disk = 43526545408 bytes ... done
+Oct 25 22:57:20 ... writing SAindex to disk
+Writing 8 bytes into Tutorial_1/ref_genome//SAindex ; empty space on disk = 43512881152 bytes ... done
+Writing 80 bytes into Tutorial_1/ref_genome//SAindex ; empty space on disk = 43512881152 bytes ... done
+Writing 1529171 bytes into Tutorial_1/ref_genome//SAindex ; empty space on disk = 43512881152 bytes ... done
+Oct 25 22:57:20 ..... finished successfully
+DONE: Genome generation, EXITING
