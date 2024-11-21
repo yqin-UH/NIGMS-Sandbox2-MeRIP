@@ -14,7 +14,7 @@
 + [License for Data](#license-for-data)
 
 ## **Overview**
-
+<img src="images/Design.png" width="600" />
 
 ## **Background**
 The epitranscriptome encompasses all biochemical modifications of RNA in a cell, representing a rapidly evolving area of study within molecular biology. While the discovery of RNA modifications dates back to the 1950s, initial research predominantly focused on highly abundant RNA species like ribosomal RNA (rRNA) and transfer RNA (tRNA). These molecules were easier to study due to their abundance and structural simplicity. However, low-abundance RNAs, such as messenger RNA (mRNA), remained largely unexplored due to technological limitations in detecting modifications on these less common species.
