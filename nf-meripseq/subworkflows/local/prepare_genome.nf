@@ -4,17 +4,15 @@
 
 include { GUNZIP as GUNZIP_FASTA       } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_GTF         } from '../../modules/nf-core/gunzip'
-include { STAR_GENOMEGENERATE          } from '../../modules/nf-core/star/genomegenerate'
-include { UNTAR as UNTAR_STAR_INDEX    } from '../../modules/nf-core/untar/main'
 include { UNTAR as UNTAR_RSEM_INDEX    } from '../../modules/nf-core/untar/main'
 include { RSEM_PREPAREREFERENCE        } from '../../modules/nf-core/rsem/preparereference'
+include { RSEM_PREPAREREFERENCE as MAKE_TRANSCRIPTS_FASTA       } from '../../modules/nf-core/rsem/preparereference'
 
 workflow PREPARE_GENOME {
     take:
-    fasta              //    path: path to genome fasta file
-    gtf                //    file: /path/to/genome.gtf
-    star_index         //    file: /path/to/star/index/
-    rsem_index         //    file: /path/to/resm/index/
+    fasta                //    path: path to genome fasta file
+    gtf                  //    file: /path/to/genome.gtf
+    rsem_index           //    file: /path/to/resm/index/
 
     main:
 
@@ -54,25 +52,10 @@ workflow PREPARE_GENOME {
     }
 
     //
-    // Uncompress STAR index or generate from scratch if required
+    // Uncompress transcript fasta file / create if required
     //
-    ch_star_index = Channel.empty()
-    
-        if (star_index) {
-            // Use pre-built STAR index directly
-            ch_star_index = Channel.fromPath(star_index, checkIfExists: true)
-            if (!ch_star_index) {
-                error "Pre-built STAR index not found at: ${star_index}. Please check the path or file existence."
-            }
-        } else {
-            // Generate STAR index using FASTA and GTF
-            STAR_GENOMEGENERATE (
-                ch_fasta.map { [ [:], it ] },
-                ch_gtf.map { [ [:], it ] }
-            ) 
-            ch_star_index = STAR_GENOMEGENERATE.out.index.map { it[1] }
-            ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions)
-        }
+    ch_transcript_fasta = MAKE_TRANSCRIPTS_FASTA ( ch_fasta, ch_gtf ).transcript_fasta
+    ch_versions         = ch_versions.mix(MAKE_TRANSCRIPTS_FASTA.out.versions)
 
     //
     // Uncompress RSEM index or generate from scratch if required
@@ -89,12 +72,11 @@ workflow PREPARE_GENOME {
             ch_rsem_index = RSEM_PREPAREREFERENCE ( ch_fasta, ch_gtf ).index
             ch_versions   = ch_versions.mix(RSEM_PREPAREREFERENCE.out.versions)
         }
-    
 
     emit:
-    fasta         = ch_fasta                  //    path: genome.fasta
-    gtf           = ch_gtf                    //    path: genome.gtf
-    star_index    = ch_star_index             //    path: star/index/
-    rsem_index    = ch_rsem_index             //    path: rsem/index/
-    versions    = ch_versions.ifEmpty(null)   // channel: [ versions.yml ]
+    fasta            = ch_fasta                  //    path: genome.fasta
+    gtf              = ch_gtf                    //    path: genome.gtf
+    transcript_fasta = ch_transcript_fasta       // channel: path(transcript.fasta)
+    rsem_index       = ch_rsem_index             //    path: rsem/index/
+    versions         = ch_versions.ifEmpty(null) // channel: [ versions.yml ]
 }

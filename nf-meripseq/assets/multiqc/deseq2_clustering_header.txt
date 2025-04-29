@@ -1,5 +1,5 @@
 #id: 'deseq2_clustering'
-#section_name: 'MERGED LIB: DESeq2 sample similarity'
+#section_name: 'MACS3: DESeq2 sample similarity'
 #description: "Matrix is generated from clustering with Euclidean distances between
 #              <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html' target='_blank'>DESeq2</a>
 #              rlog values for each sample

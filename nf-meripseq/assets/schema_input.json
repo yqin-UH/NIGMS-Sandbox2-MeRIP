@@ -45,11 +45,6 @@
                 "errorMessage": "Control entry cannot contain spaces",
                 "meta": ["control"]
             },
-            "control_replicate": {
-                "type": "integer",
-                "errorMessage": "Replicate id not an integer!",
-                "meta": ["control_replicate"]
-            },
             "group": {
                 "type": "string",
                 "pattern": "^\\S+$",

@@ -23,6 +23,13 @@
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row.",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "contrast": {
+                    "type": "string",
+                    "description": "Single contrast (e.g., GroupA_vs_GroupB) or path to a file listing multiple contrasts.",
+                    "help_text": "Provide a single contrast string like 'Treatment_vs_Control' or a file path (ending with .txt or .csv) containing multiple contrasts, one per line. Each contrast must follow the format 'GroupA_vs_GroupB'.",
+                    "fa_icon": "fas fa-exchange-alt",
+                    "pattern": "^[\\w\\-/.:\\\\]+(\\.txt|\\.csv)?$"
+                },
                 "seq_center": {
                     "type": "string",
                     "description": "Sequencing center information to be added to read group of BAM files.",
@@ -52,6 +59,12 @@
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
                 },
+                "save_reference": {
+                    "type": "boolean",
+                    "description": "Save the RSEM/STAR index for future alignment.",
+                    "help_text": "By default, the genome index will not be saved.",
+                    "fa_icon": "fas fa-save"
+                },
                 "save_align_intermeds": {
                     "type": "boolean",
                     "description": "Save the intermediate BAM files from the alignment step.",
@@ -72,6 +85,12 @@
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
+                "bsgenome": {
+                    "type": "string",
+                    "description": "Name of BSgenome package.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "Specify the BSgenome package name for GC bias correction in ExomePeak2 (e.g. BSgenome.Hsapiens.UCSC.hg38). Auto-set for UCSC genomes (--genome hg38/mm10), use 'null' to disable."
+                },
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
@@ -91,6 +110,13 @@
                     "description": "Path to GTF annotation file.",
                     "fa_icon": "fas fa-code-branch",
                     "help_text": "Either this parameter or `--gff` is *mandatory* if --genome is not specified."
+                },
+                "transcript_fasta":{
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "far fa-file-code",
+                    "description": "Path Path to FASTA trasc file."
                 },
                 "star_index": {
                     "type": "string",
@@ -126,6 +152,21 @@
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "default": "s3://ngi-igenomes/igenomes/"
+                },
+                "bsgenomes": {
+                    "type": "object",
+                    "default": {
+                        "hg38": "BSgenome.Hsapiens.UCSC.hg38",
+                        "GRCh38": "BSgenome.Hsapiens.NCBI.GRCh38",
+                        "hg19": "BSgenome.Hsapiens.UCSC.hg19",
+                        "mm10": "BSgenome.Mmusculus.UCSC.mm10"
+                    },
+                    "properties": {
+                        ".*": {
+                            "type": "string",
+                            "pattern": "^BSgenome\\.[A-Za-z]+\\.[A-Z]+\\.[a-z0-9]+$"
+                        }
+                    }
                 }
             }
         },
@@ -135,6 +176,18 @@
             "description": "Additional quality control options.",
             "default": "",
             "properties": {
+                "min_trimmed_reads":{
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Minimum reads needed after trimming",
+                    "fa_icon": "far fa-check-square"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "default": "false",
+                    "description":"Whether to save trimmed fastq files",
+                    "fa_icon": "far fa-check-square"
+                },
                 "extra_fqlint_args": {
                     "type": "string",
                     "default": "--disable-validator P001",
@@ -334,6 +387,30 @@
                     "type": "boolean",
                     "description": "Skip consensus peak generation, annotation and counting.",
                     "fa_icon": "fas fa-fast-forward"
+                },
+                "skip_differential_peaks": {
+                    "type": "boolean",
+                    "description": "Skip differential peaks analysis using MACS3 or/and exomePeak2",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "skip_exomepeak2": {
+                    "type": "boolean",
+                    "description": "Skip exomePeak2 steps, including peak calling, identify consensus peaks, and differential peaks.",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "skip_exomepeak2_consensus": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip exomePeak2 concensus peak calling.",
+                    "default": false
+                },
+                 "skip_exomepeak2_single": {
+                    "type": "boolean",
+                    "description": "Skip exomePeak2 peak calling steps for individual samples",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward"
                 }
             }
         },
@@ -484,17 +561,13 @@
         }
     },
     "allOf": [
-        {
-            "$ref": "#/$defs/input_output_options"
-        },
-        {
-            "$ref": "#/$defs/reference_genome_options"
-        },
-        {
-            "$ref": "#/$defs/institutional_config_options"
-        },
-        {
-            "$ref": "#/$defs/generic_options"
-        }
+        {"$ref": "#/$defs/input_output_options"},
+        {"$ref": "#/$defs/reference_genome_options"},
+        {"$ref": "#/$defs/quality_control"},
+        {"$ref": "#/$defs/alignment_options"},
+        {"$ref": "#/$defs/peak_calling_options"},
+        {"$ref": "#/$defs/process_skipping_options"},
+        {"$ref": "#/$defs/institutional_config_options"},
+        {"$ref": "#/$defs/generic_options"}
     ]
 }

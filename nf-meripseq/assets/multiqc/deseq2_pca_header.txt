@@ -1,5 +1,5 @@
 #id: 'deseq2_pca'
-#section_name: 'MERGED LIB: DESeq2 PCA plot'
+#section_name: 'MACS3: DESeq2 PCA plot'
 #description: "PCA plot of the samples in the experiment.
 #              These values are calculated using <a href='https://bioconductor.org/packages/release/bioc/html/DESeq2.html'>DESeq2</a>
 #              in the <a href='https://github.com/nf-core/chipseq/blob/master/bin/deseq2_qc.r'><code>deseq2_qc.r</code></a> script."

@@ -92,6 +92,15 @@ write.table(summary.dat,file=SummaryFile,quote=FALSE,sep="\t",row.names=FALSE,co
 ################################################
 ################################################
 
+bigger_theme <- theme(
+    text = element_text(size = 14),                         # Base font size (default is ~11)
+    plot.title = element_text(size = 18, face = "bold"),    # Title font (default ~14)
+    axis.title = element_text(size = 16),                   # Axis titles (default ~12)
+    axis.text = element_text(size = 14),                    # Axis text (default ~10)
+    legend.text = element_text(size = 14),                  # Legend text (default ~10)
+    legend.title = element_text(size = 16)                  # Legend title (default ~12)
+)
+
 ## RETURNS VIOLIN PLOT OBJECT
 violin.plot <- function(plot.dat,x,y,ylab,title,log) {
 
@@ -101,6 +110,7 @@ violin.plot <- function(plot.dat,x,y,ylab,title,log) {
                 xlab("") +
                 ylab(ylab) +
                 ggtitle(title) +
+                bigger_theme +
                 theme(legend.position="none",
                     panel.grid.major = element_blank(),
                     panel.grid.minor = element_blank(),
@@ -131,6 +141,7 @@ plot  <- ggplot(peak.count.dat, aes(x=name, y=count)) +
             xlab("") +
             ylab("Number of peaks") +
             ggtitle("Peak count") +
+            bigger_theme +
             theme(legend.position="none",
                 panel.grid.major = element_blank(),
                 panel.grid.minor = element_blank(),

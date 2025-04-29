@@ -77,9 +77,9 @@ workflow PIPELINE_INITIALISATION {
         .map {
             meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+                    return [ meta.id, meta + [ single_end:true, strandedness:'auto' ], [ fastq_1 ] ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                    return [ meta.id, meta + [ single_end:false, strandedness:'auto' ], [ fastq_1, fastq_2 ] ]
                 }
         }
         .groupTuple()
@@ -262,3 +262,85 @@ def methodsDescriptionText(mqc_methods_yaml) {
     return description_html.toString()
 }
 
+// validate the contrast string/file for differential analysis
+def validate_contrast(contrast, ch_samplesheet) {
+    def groups = ch_samplesheet
+                    .map { meta, reads -> meta.group }
+                    .collect().flatten().unique().toList()
+
+    if (contrast == null) {
+        error "Parameter --contrast is required."
+    }
+
+    def contrast_list = []
+    if (contrast instanceof String) {
+        if (contrast.contains('_vs_')) {
+            contrast_list << contrast
+        } else if (new File(contrast).exists()) {
+            contrast_list = new File(contrast).readLines()
+        } else {
+            error "Invalid --contrast parameter: ${contrast}. Must be a string in the format of A_vs_B or a file containing such strings."
+        }
+    } else {
+        error "Invalid --contrast parameter: ${contrast}. Must be a string or a file path."
+    }
+
+    contrast_list.each { contrast_item ->
+        def (groupA, groupB) = contrast_item.split('_vs_')
+        if (!groups.contains(groupA) || !groups.contains(groupB)) {
+            error "Contrast ${contrast_item} contains groups not present in the samplesheet."
+        }
+    }
+
+    // println "All contrasts are valid: ${contrast_list}"
+     return contrast_list
+}
+
+
+// First, let's define a better helper function to group BAM files by group
+def groupBamFilesByGroup(ip_control_channel) {
+    return ip_control_channel
+        .map { meta, ip_bams, input_bams ->
+            // Extract the group from meta and return as [group, ip_bams, input_bams]
+            [ meta.group, ip_bams, input_bams ]
+        }
+        .groupTuple(by: 0) // Group by group name
+        .map { group, ip_bams_list, input_bams_list ->
+            // Flatten nested lists of BAM files
+            def flat_ip_bams = ip_bams_list.flatten()
+            def flat_input_bams = input_bams_list.flatten()
+            [ group, flat_ip_bams, flat_input_bams ]
+        }
+}
+
+// Function to create contrast pairs for differential analysis
+def createContrastPairs(grouped_bams_channel, contrast_list) {
+    return grouped_bams_channel
+        .toList() // Convert to list to make it available for multiple contrasts
+        .flatMap { grouped_samples ->
+            // Convert list to a map for easy lookup
+            def group_map = grouped_samples.collectEntries { [it[0], [it[1], it[2]]] }
+            
+            // For each contrast, create a tuple with the required format
+            contrast_list.collect { contrast ->
+                def (group1, group2) = contrast.split('_vs_')
+                
+                // Check if both groups exist in our data
+                if (group_map.containsKey(group1) && group_map.containsKey(group2)) {
+                    return [
+                        contrast,                     // Contrast name (e.g., "groupA_vs_groupB")
+                        group1,                       // Name of group 1
+                        group_map[group1][0],         // IP BAMs for group 1
+                        group_map[group1][1],         // Input BAMs for group 1
+                        group2,                       // Name of group 2
+                        group_map[group2][0],         // IP BAMs for group 2
+                        group_map[group2][1]          // Input BAMs for group 2
+                    ]
+                } else {
+                    // Skip this contrast if we don't have data for both groups
+                    log.warn "Cannot create contrast ${contrast}: missing data for group ${!group_map.containsKey(group1) ? group1 : group2}"
+                    return null
+                }
+            }.findAll { it != null } // Remove any null entries
+        }
+}

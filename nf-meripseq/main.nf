@@ -13,7 +13,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { MERIPSEQ  } from './workflows/meripseq'
+include { MERIPSEQ                } from './workflows/meripseq'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
@@ -26,8 +26,7 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_meri
 
 params.fasta            = getGenomeAttribute('fasta')
 params.gtf              = getGenomeAttribute('gtf')
-params.star_index       = getGenomeAttribute('star')
-params.rsem_index       = getGenomeAttribute('rsem')
+params.macs_gsize       = getGenomeAttribute('macs_gsize')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
