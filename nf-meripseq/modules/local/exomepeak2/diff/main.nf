@@ -36,6 +36,8 @@ process EXOMEPEAK2_DIFF {
     def input_bams2_paths = input_bams2.join(',')
 
     """
+    
+
     # Run the exomePeak2 R script
     exomepeak2.r \\
         --bam_ip "$ip_bams1_paths" \\

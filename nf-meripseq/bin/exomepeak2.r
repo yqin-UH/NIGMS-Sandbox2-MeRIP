@@ -1,4 +1,10 @@
 #!/usr/bin/env Rscript
+user_lib <- Sys.getenv("R_LIBS_USER", unset = "/tmp/r_libs")
+if (!dir.exists(user_lib)) {
+  dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+}
+.libPaths(c(user_lib, .libPaths()))
+
 # Load required libraries
 suppressPackageStartupMessages({
     library(optparse)
@@ -69,7 +75,7 @@ if (!is.null(control_bam_input)) cat("Control Input BAM files:", paste(control_b
 # Load BiocManager after ensuring it's installed
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     cat("Installing BiocManager...\n")
-    install.packages("BiocManager", repos = "http://cran.rstudio.com/", quiet = TRUE)
+    install.packages("BiocManager", lib = user_lib, repos = "http://cran.rstudio.com/", quiet = TRUE)
 }
 suppressPackageStartupMessages(library(BiocManager))
 
@@ -78,7 +84,7 @@ bsgenome <- NULL
 if (!is.null(opt$bsgenome) && opt$bsgenome != "null") {
     if (!requireNamespace(opt$bsgenome, quietly = TRUE)) {
         cat("Installing ", opt$bsgenome, "...\n")
-        BiocManager::install(opt$bsgenome, update = FALSE, ask = FALSE)
+        BiocManager::install(opt$bsgenome, update = FALSE, ask = FALSE,lib = user_lib)
     }
     suppressPackageStartupMessages(library(opt$bsgenome, character.only = TRUE))
     bsgenome <- get(opt$bsgenome)
