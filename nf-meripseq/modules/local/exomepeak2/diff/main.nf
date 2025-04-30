@@ -7,8 +7,7 @@ process EXOMEPEAK2_DIFF {
 
     // Container setup: Use local .sif or Docker image
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        params.singularity_image_path :
-        'r-meripseq:1.0' }"
+        params.singularity_image_path : params.docker_image_path }"
 
     input:
         tuple val(contrast), val(group1), path(ip_bams1), path(input_bams1), val(group2), path(ip_bams2), path(input_bams2)
