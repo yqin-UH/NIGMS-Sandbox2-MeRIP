@@ -1,6 +1,6 @@
 process EXOMEPEAK2_DIFF {
     tag "${contrast}"
-    label 'process_medium'
+    label 'process_high'
 
     // Conda environment with required packages
     conda "conda-forge::r-base conda-forge::r-optparse conda-forge::r-biocmanager bioconda::bioconductor-exomepeak2"
