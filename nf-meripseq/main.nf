@@ -14,6 +14,7 @@
 */
 
 include { MERIPSEQ                } from './workflows/meripseq'
+include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_meripseq_pipeline'
@@ -43,12 +44,25 @@ workflow NF_MERIPSEQ {
     samplesheet // channel: samplesheet read in from --input
 
     main:
+    ch_versions = Channel.empty()
 
+    // SUBWORKFLOW: Prepare genome files
+    PREPARE_GENOME (
+        params.fasta,
+        params.gtf,
+        params.rsem_index
+    )
+    
     //
     // WORKFLOW: Run pipeline
     //
     MERIPSEQ (
-        samplesheet
+        samplesheet,
+        ch_versions,
+        PREPARE_GENOME.out.fasta,
+        PREPARE_GENOME.out.gtf,
+        PREPARE_GENOME.out.rsem_index,
+        PREPARE_GENOME.out.transcript_fasta
     )
     emit:
     multiqc_report = MERIPSEQ.out.multiqc_report // channel: /path/to/multiqc_report.html

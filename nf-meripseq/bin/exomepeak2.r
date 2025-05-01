@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-user_lib <- Sys.getenv("R_LIBS_USER", unset = "/tmp/r_libs")
+user_lib <- Sys.getenv("R_LIBS_USER", unset = file.path(getwd(),"r_libs_user"))
 if (!dir.exists(user_lib)) {
   dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
 }
@@ -90,6 +90,16 @@ if (!is.null(opt$bsgenome) && opt$bsgenome != "null") {
     bsgenome <- get(opt$bsgenome)
 } else {
     message("Warning: --bsgenome is NULL or 'null'; skipping GC content correction.")
+}
+
+# set parallel workers
+if (opt$cores > 1) {
+    # Try to use MulticoreParam which doesn't rely on socket connections
+    register(MulticoreParam(workers = opt$cores))
+    cat("Using MulticoreParam with", opt$cores, "cores\n")
+} else {
+    register(SerialParam())
+    cat("Using SerialParam (single core)\n")
 }
 
 # Run exomePeak2 peak calling
