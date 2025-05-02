@@ -37,6 +37,75 @@ option_list <- list(
 # Parse arguments
 opt <- parse_args(OptionParser(option_list = option_list))
 
+# Set environment variables to help with parallel execution
+Sys.setenv(R_PARALLEL_PORT = "random")
+Sys.setenv(R_PARALLEL_SOCKET_TIMEOUT = "3600")
+
+# Override the problematic featuresCounts function in exomePeak2
+if (requireNamespace("exomepeak2", quietly = TRUE)) {
+  # Create a wrapper for the original function
+  original_featuresCounts <- exomepeak2:::featuresCounts
+  
+  # Define a fixed version that doesn't use SnowParam
+  fixed_featuresCounts <- function(features,
+                                   bam_dirs,
+                                   strandness = c("unstrand", "1st_strand", "2nd_strand"),
+                                   parallel = 1,
+                                   yield_size = 5000000) {
+    exist_indx <- file.exists(bam_dirs)
+    
+    if(any(!exist_indx)) {
+      stop(paste0("Cannot find BAM file(s) of \n",
+                  paste(bam_dirs[!exist_indx], collapse = ", "),
+                  "\nplease re-check the input directories"))
+    }
+    
+    strandness <- match.arg(strandness)
+    
+    # Only register MulticoreParam, avoid SnowParam
+    BiocParallel::register(BiocParallel::SerialParam())
+    if (parallel > 1) {
+      suppressWarnings(BiocParallel::register(BiocParallel::MulticoreParam(workers = parallel)))
+    }
+    
+    # Setup bam file list
+    bam_lst = GenomicAlignments::BamFileList(file = bam_dirs, asMates = TRUE)
+    GenomicAlignments::yieldSize(bam_lst) = yield_size
+    
+    # Count using summarizeOverlaps
+    if(strandness == "1st_strand") {
+      preprocess_func <- GenomicAlignments::readsReverse
+    } else {
+      preprocess_func <- NULL
+    }
+    
+    se <- GenomicAlignments::summarizeOverlaps(
+      features = features,
+      reads = bam_lst,
+      mode = "Union",
+      inter.feature = FALSE,
+      singleEnd = FALSE,
+      preprocess.reads = preprocess_func,
+      ignore.strand = strandness == "unstrand",
+      fragments = TRUE
+    )
+    
+    return(se)
+  }
+  
+  # Replace the function in the exomepeak2 namespace
+  tryCatch({
+    unlockBinding("featuresCounts", asNamespace("exomepeak2"))
+    assignInNamespace("featuresCounts", fixed_featuresCounts, ns="exomepeak2")
+    lockBinding("featuresCounts", asNamespace("exomepeak2"))
+    cat("Successfully patched exomepeak2::featuresCounts to avoid socket connections\n")
+  }, error = function(e) {
+    cat("Warning: Unable to patch exomepeak2::featuresCounts - ", e$message, "\n")
+    cat("Will try to use environment settings instead\n")
+  })
+}
+
+
 # Function to split space-separated paths into a character vector
 parse_bam_paths <- function(path_string) {
     if (is.null(path_string)) return(NULL)

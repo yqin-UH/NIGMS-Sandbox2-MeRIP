@@ -18,11 +18,12 @@ The MeRIP-seq data analysis tutorial is structured into four submodules, designe
 - **Preprocessing and Quality Control**: This submodule covers data retrieval, quality control, and alignment steps to prepare raw sequencing data for downstream analysis. Data is downloaded from sources like NCBI SRA, stored in an AWS S3 bucket, and processed using Python in Jupyter notebooks on SageMaker.
 - **Peak Calling and Differential Analysis**: This step focuses on identifying m6A-enriched regions (peaks) using peak-calling tools and performing differential methylation analysis across conditions using R-based workflows.
 - **Downstream Analysis and Visualization**: Users explore RNA methylation patterns, perform functional enrichment analyses (e.g., GO and KEGG), and integrate methylation and gene expression data to uncover biologically meaningful insights. Visualization tools such as volcano plots and meta-gene plots are also emphasized for effective data interpretation.
-- **Workflow Automation with Nextflow**: To simplify the analysis process, a Nextflow-based automated pipeline is introduced. This pipeline integrates all analysis steps, enabling seamless execution on AWS, with outputs stored directly in S3 buckets for easy access and reproducibility.
+- **Workflow Automation with Nextflow**: To simplify and standardize the analysis process, a Nextflow-based automated pipeline is introduced. This pipeline integrates all analysis steps, enabling reproducible and seamless execution on AWS.
+- **Scalable Workflow Execution with AWS Batch**: This submodule demonstrates how to run the Nextflow nf-meripseq pipeline on AWS Batch for scalable, cloud-based analysis. Jobs are submitted and managed automatically, with results stored in S3 to support large-scale, reproducible workflows without manual infrastructure setup.
 
 Additionally, an **introductory module** (Submodule-0) provides foundational knowledge about RNA methylation, including its biological significance and technical aspects of MeRIP-seq. The tutorial leverages AWS SageMaker for scalability and efficiency, employing both Python and R kernels, making it accessible and adaptable for bioinformatics researchers.
 
-<img src="images/Design.png" width="450" />
+<img src="images/Design2.png" width="550" />
 
 ## **Background**
 The epitranscriptome encompasses all biochemical modifications of RNA in a cell, representing a rapidly evolving area of study within molecular biology. 
@@ -55,10 +56,10 @@ This repository contains several notebook files that serve as bioinformatics MeR
     - Click "**Create notebook instance**" at the top of the Notebook instances.
     - Fill out the following details:
         - Notebook instance name: Provide a unique name (e.g., notebook-yourname-date).
-        - Instance type: Choose **ml.t3.xlarge** (or a larger instance type if your dataset is large, [more examples](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-available-instance-types.html)).
+        - Instance type: Choose <mark>**ml.t3.xlarge**</mark> (or a larger instance type if your dataset is large, [more examples](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-available-instance-types.html)).
         - Click "**Addtional configurations**"
             - Lifecycle Configuration (Optional): Add a script to install any additional dependencies automatically.
-            - **Volumne size in GB**: change it to **50**
+            - **Volumne size in GB**: change it to <mark>**50**</mark>
         - IAM Role: If you don’t have an existing role, create a new one with S3 full access and AmazonSageMakerFullAccess permissions.
 - Start the Notebook Instance:
     - Click "**Create notebook instance**" and wait for the status to change to "InService".
@@ -67,9 +68,9 @@ This repository contains several notebook files that serve as bioinformatics MeR
 - Open the Notebook Instance:
     - Once the instance is active, click "Open JupyterLab" to access the notebook.
 - Clone the Repository:
-    - Open a terminal from the Jupyter interface.
-    - Run the following command:
-        - <code>**git clone https://github.com/yqin-UH/NIGMS-Sandbox2-MeRIP.git**</code>
+    - From Laucher (File -> New Laucher), select "conda_python3" notebook by clicking it.
+    - Type the following command in the code cell of the new notebook, and run it (click the triangle button or use ctrl + enter):
+        - <code>**! git clone https://github.com/yqin-UH/NIGMS-Sandbox2-MeRIP.git**</code>
     - This will create a folder containing all tutorial files.
     
 **3. Running the Tutorials**
@@ -81,6 +82,21 @@ This repository contains several notebook files that serve as bioinformatics MeR
     - Run each section, or "cell," sequentially by clicking the Run button (▶) in the toolbar.
     - A running cell is indicated by an asterisk ([*]). Once it completes, the asterisk will change to a number indicating the order of execution.
     - [More instructions](https://www.dataquest.io/blog/jupyter-notebook-tutorial/) on how to use jupyter notebooks
+<div style="border: 1px solid #659078; padding: 0px; border-radius: 4px;">
+  <div style="background-color: #d4edda; padding: 5px;">
+    <i class="fas fa-lightbulb" style="color: #0e4628;margin-right: 5px;"></i><a style="color: #0e4628"><b>Tips</b> - Jupyter Notebooks</a>
+  </div>
+  <p style="margin-left: 5px;">
+      <ul>
+          <li><b>Kernel Selection and Status</b>: At the top-right corner of the notebook, you’ll see the current kernel (runtime environment). In this module, we use "conda_python3" for Submodules 1, 4, and 5, and "R" kernel for Submodules 2 and 3. A small kernel status circle next to the name indicates activity. </li>
+          <li><b>Managing Long Outputs</b>: If a code cell produces too much output, right-click on the output area and select "Enable Scrolling for Outputs". This helps save space and keeps your notebook tidy.</li>
+          <li><b>Markdown Cells for Explanations</b>: All explanations are written in Markdown cells (not code). If you accidentally enter "edit mode", you can run the markdown with Ctrl + Enter to format it again. Use the top cell type dropdown menu (e.g., Code, Markdown) to change the type if needed.</li>
+          <li><b>Running Code Cells</b>: To run a cell: <code>Ctrl + Enter</code>: Run the cell; <code>Shift + Enter</code>: Run and move to the next cell. Also, The cell prompt changes from: [ ] = waiting to run, [*] = running, [1], [2], ... = completed (shows execution order)</li>
+          <li><b>Undoing Accidental Edits</b>:  If you accidentally modify a cell, use: <code>Ctrl + Z</code>code to undo edits in the current cell. Use the top Edit menu → Undo Cell Operation for structural changes like deleted cells</li>
+          <li><b>Adding New Cells for Testing</b>: You can insert new cells to try code snippets or experiments: Use the “+” button in the toolbar, or right-click between cells and select "Insert Cell Below". This is useful for quick tests without disrupting the main workflow.</li>
+       </ul>
+  </p>
+</div>
 
 ## **Software Requirements**
 In this module, you will need access to a Jupyter notebook in AWS SageMaker environment. The environment settings are listed here:
@@ -147,7 +163,7 @@ For **submodule 2 and 3**, the R kernels are used and the detailed package versi
 
 
 ## **Architecture Design**
-
+<img src="images/Architecture.png" width="700" />
 
 ## **Data**
 The dataset used in this tutorial is derived from **GSE119168**, which was originally published as part of the study using the **RADAR** pipeline for MeRIP-seq. The RADAR pipeline is a computational framework designed to identify m6A-modified regions in RNA, specifically focusing on high-throughput MeRIP-seq data analysis, and we will use it for downstream analysis in the next tutorial. The dataset includes six omental tumor tissues and seven normal fallopian tube tissues, and both input and m6A immunoprecipation libraries were sequenced by the NextSeq 500 platform at PE37 mode (pair-end, 37bp). 
