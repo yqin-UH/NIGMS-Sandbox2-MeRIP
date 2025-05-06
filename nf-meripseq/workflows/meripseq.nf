@@ -13,6 +13,8 @@ include { FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS      } from '../subworkflows/nf-c
 
 include { MULTIQC                                   } from '../modules/nf-core/multiqc/main'
 include { KHMER_UNIQUEKMERS                         } from '../modules/nf-core/khmer/uniquekmers/main'
+include { HOMER_ANNOTATEPEAKS as ANNOT_PEAK         } from '../modules/nf-core/homer/annotatepeaks/main'
+include { HOMER_ANNOTATEPEAKS as ANNOT_DIFF_PEAK    } from '../modules/nf-core/homer/annotatepeaks/main'
 include { EXOMEPEAK2_PEAK as EXOMEPEAK2_SINGLE      } from '../modules/local/exomepeak2/peak'
 include { EXOMEPEAK2_PEAK as EXOMEPEAK2_CONSENSUS   } from '../modules/local/exomepeak2/peak'
 include { EXOMEPEAK2_DIFF                           } from '../modules/local/exomepeak2/diff/main'
@@ -286,6 +288,17 @@ workflow MERIPSEQ {
                 ch_gtf,
                 bsgenome
             )
+            ch_versions = ch_versions.mix(EXOMEPEAK2_CONSENSUS.out.versions)
+
+            // Annotate peaks
+            if (!params.skip_peak_annotation) {
+                ANNOT_PEAK (
+                    EXOMEPEAK2_CONSENSUS.out.bed,
+                    ch_fasta,
+                    ch_gtf
+                )
+                ch_versions = ch_versions.mix(ANNOT_PEAK.out.versions)
+            }
         }
         
         // Run differential exomePeak2 analysis
@@ -309,6 +322,23 @@ workflow MERIPSEQ {
                 ch_gtf,
                 bsgenome
             )
+            ch_versions = ch_versions.mix(EXOMEPEAK2_DIFF.out.versions)
+            if (!params.skip_peak_annotation) {
+                EXOMEPEAK2_DIFF.out.bed
+                    .map { contrast, peak ->
+                        // Create a meta map with id and single_end fields
+                        def meta = [id: contrast, single_end: true]  // Adjust single_end based on your data
+                        [ meta, peak ]
+                    }
+                    .set { ch_diff_peaks_for_annotation }
+
+                ANNOT_DIFF_PEAK (
+                    ch_diff_peaks_for_annotation,
+                    ch_fasta,
+                    ch_gtf
+                )
+                ch_versions = ch_versions.mix(ANNOT_DIFF_PEAK.out.versions)
+            }
         }
     }
 

@@ -26,7 +26,7 @@ workflow BED_CONSENSUS_MACS3 {
     ch_versions = Channel.empty()
 
     // Create channels: [ meta , [ peaks ] ]
-    // Where meta = [ id:antibody, multiple_groups:true/false, replicates_exist:true/false ]
+    // Where meta = [ id:group, multiple_groups:true/false, replicates_exist:true/false ]
     ch_peaks
         .map {
             meta, peak ->
