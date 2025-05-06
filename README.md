@@ -58,9 +58,9 @@ This repository contains several notebook files that serve as bioinformatics MeR
         - Notebook instance name: Provide a unique name (e.g., notebook-yourname-date).
         - Instance type: Choose <mark>**ml.t3.xlarge**</mark> (or a larger instance type if your dataset is large, [more examples](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-available-instance-types.html)).
         - Click "**Addtional configurations**"
-            - Lifecycle Configuration (Optional): Add a script to install any additional dependencies automatically.
+            - Lifecycle Configuration (Optional): Add a script to install any additional dependencies automatically. Ex. 30min-idle-shutdown; 1-hour-idle-shutdown.
             - **Volumne size in GB**: change it to <mark>**50**</mark>
-        - IAM Role: If you don’t have an existing role, create a new one with S3 full access and AmazonSageMakerFullAccess permissions.
+        - IAM Role: If you don’t have an existing role, create a new one with S3 full access and AmazonSageMakerFullAccess permissions. Click <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html">here</a> for detailed instructions on how to create an IAM Role.
 - Start the Notebook Instance:
     - Click "**Create notebook instance**" and wait for the status to change to "InService".
 
@@ -75,7 +75,7 @@ This repository contains several notebook files that serve as bioinformatics MeR
     
 **3. Running the Tutorials**
 - Locate Tutorial Files:
-    - Navigate to the folder (just cloned) from the Jupyter interface.
+    - Navigate to the folder (just cloned) from the Jupyter interface (left-hand side of console).
 - Open a Tutorial Notebook:
     - Double-click the <code>**.ipynb**</code> files (the tutorials) to open them in the Jupyter Notebook environment.
 - Execute Notebook Cells and run the tutorials:
