@@ -30,23 +30,25 @@ workflow BED_CONSENSUS_MACS3 {
     ch_peaks
         .map {
             meta, peak ->
-                [ meta.group, meta.id - ~/_REP\d+$/, peak ]
+                [ meta.group, meta.id - ~/_REP\d+$/, peak,meta.single_end ]
         }
         .groupTuple()
         .map {
-            group, groups, peaks ->
+            group, groups, peaks, single_end_list ->
                 [
                     group,
                     groups.groupBy().collectEntries { [(it.key) : it.value.size()] },
-                    peaks
+                    peaks,
+		    single_end_list[0]
                 ]
         }
         .map {
-            group, groups, peaks ->
+            group, groups, peaks,single_end ->
                 def meta_new = [:]
                 meta_new.id = group
                 meta_new.multiple_groups = groups.size() > 1
                 meta_new.replicates_exist = groups.max { it.value }.value > 1
+		meta_new.single_end = single_end
                 [ meta_new, peaks ]
         }
         .set { ch_group_peaks }
